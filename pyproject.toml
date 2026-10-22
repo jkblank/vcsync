@@ -1,0 +1,31 @@
+[project]
+name = "vcsync"
+version = "0.1.0"
+description = "Standalone, owned iPod sync engine for VCpod -- forked from iOpenPod 1.68.1 (MIT), GUI removed."
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.3.0,<3.0.0",
+    "pillow>=11.2.1,<12.0.0",
+    "pycryptodome>=3.20.0,<4.0.0",
+    "mutagen>=1.47.0,<2.0.0",
+    "pyusb>=1.3.1",
+    "libusb-package>=1.0.26",
+    "wasmtime>=30.0.0",
+    "feedparser>=6.0.10",
+    "requests>=2.31.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vcsync"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/vcsync/itunesdb_writer/wasm/calcHashAB.wasm" = "vcsync/itunesdb_writer/wasm/calcHashAB.wasm"
