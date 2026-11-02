@@ -55,7 +55,18 @@ ARTWORK_FORMATS_BY_ID: dict[int, ArtworkFormat] = {
     1055: ArtworkFormat(1055, 128, 128, 256, "RGB565_LE", "cover_medium", "Classic album art medium"),
     1056: ArtworkFormat(1056, 128, 128, 256, "RGB565_LE", "cover_medium_alt", "128x128 cover art (alternate)"),
     1060: ArtworkFormat(1060, 320, 320, 640, "RGB565_LE", "cover_large", "Classic album art large"),
-    1061: ArtworkFormat(1061, 56, 56, 112, "RGB565_LE", "cover_small", "Classic album art small"),
+    # F1061 is natively 55x55 visible RGB565 pixels on Classic 6/6.5/7G and
+    # Nano 3G firmware, not 56x56 -- each 112-byte row holds 110 visible
+    # pixel bytes plus 2 padding bytes (upstream iOpenPod 233aeeb/ADR-0218,
+    # based on independent firmware checks; no 56x56 variant is evidenced).
+    # The prior 56x56 definition fed one extra garbage column/row into every
+    # encode, which is exactly the "small" cover art render corruption on
+    # real Classic/Nano 3G hardware this fix addresses. row_bytes is left at
+    # 112 on purpose: default_stride_pixels_for_format() already derives a
+    # 56-pixel on-disk stride from it (max(width, row_bytes // 2)), so the
+    # codec pads/crops the extra column automatically -- only the visible
+    # width/height needed correcting here.
+    1061: ArtworkFormat(1061, 55, 55, 112, "RGB565_LE", "cover_small", "Classic album art small"),
     1066: ArtworkFormat(1066, 64, 64, 128, "RGB565_LE", "photo_thumb", "Classic photo thumbnail"),
     1067: ArtworkFormat(1067, 720, 480, 1080, "I420_LE", "tv_out", "Classic TV output (YUV)"),
     1068: ArtworkFormat(1068, 128, 128, 256, "RGB565_LE", "cover_medium_alt", "Classic album art medium (alt 2)"),

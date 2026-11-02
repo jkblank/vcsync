@@ -43,7 +43,9 @@ IPOD_NANO_4G_FORMATS = ithmb_formats_for_device("iPod Nano", "4th Gen")
 IPOD_NANO_5G_FORMATS = ithmb_formats_for_device("iPod Nano", "5th Gen")
 
 # Stride override: format_id → stride in pixels (when stride != width)
-IPOD_STRIDE_OVERRIDE: dict[int, int] = {}
+# F1061 visible width is 55px but its on-disk row stride is 56px (112-byte
+# rows -- see the ArtworkFormat(1061, ...) comment in device/artwork_presets.py).
+IPOD_STRIDE_OVERRIDE: dict[int, int] = {1061: 56}
 
 
 def _format_decompression_bomb_message(source_path: str, exc: Exception) -> str:
